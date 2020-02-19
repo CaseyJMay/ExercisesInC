@@ -7,6 +7,7 @@ Modified version of an example from Chapter 2.5 of Head First C.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <regex.h>
 
 #define NUM_TRACKS 5
 
@@ -37,7 +38,20 @@ void find_track(char search_for[])
 // Prints track number and title.
 void find_track_regex(char pattern[])
 {
-    // TODO: fill this in
+  int    status;
+    regex_t    re;
+// reports error if no match
+    if (regcomp(&re, pattern, REG_EXTENDED|REG_NOSUB) != 0) {
+        exit(1);      /* report error */
+    }
+    int i;
+// checks for a match in the set
+    for (i=0; i<NUM_TRACKS; i++) {
+      status = regexec(&re, tracks[i], (size_t) 0, NULL, 0);
+      if (!status){
+        printf("%s", tracks[i]);
+      }
+  }
 }
 
 // Truncates the string at the first newline, if there is one.
@@ -59,7 +73,7 @@ int main (int argc, char *argv[])
     rstrip(search_for);
 
     find_track(search_for);
-    //find_track_regex(search_for);
+    find_track_regex(search_for);
 
     return 0;
 }
