@@ -96,7 +96,7 @@ double my_random_double()
   :"=r"(exp)
   :"r"(x)
   );
-  exp = 1023 - exp;
+  exp = 1022 - exp;
 
   // use the other 23 bits for the mantissa (for small numbers
   // this means we are re-using some bits)

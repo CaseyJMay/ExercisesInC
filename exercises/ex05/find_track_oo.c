@@ -30,8 +30,12 @@ typedef regex_t Regex;
 * returns: new Regex
 */
 Regex *make_regex(char *pattern, int flags) {
-    // FILL THIS IN!
-    return NULL;
+    regex_t *regex = malloc(sizeof(regex_t));
+    if (regcomp(regex, pattern, flags) != 0){
+      fprintf(stderr, "Could not compile regex\n");
+      exit(1);
+    }
+    return regex;
 }
 
 /* Checks whether a regex matches a string.
@@ -41,8 +45,20 @@ Regex *make_regex(char *pattern, int flags) {
 * returns: 1 if there's a match, 0 otherwise
 */
 int regex_match(Regex *regex, char *s) {
-    // FILL THIS IN!
-    return 0;
+    int reg_check;
+    char msg_buf[100];
+    reg_check = regexec(regex, s, 0, NULL, 0);
+    if (!reg_check){
+      return 1;
+    }
+    else if (reg_check == REG_NOMATCH){
+      return 0;
+    }
+    else {
+      regerror(reg_check, regex, msg_buf, sizeof(msg_buf));
+      fprintf(stderr, "Regex match failed: %s\n", msg_buf);
+      return 0;
+    }
 }
 
 /* Frees a Regex.
@@ -50,7 +66,7 @@ int regex_match(Regex *regex, char *s) {
 * regex: Regex pointer
 */
 void regex_free(Regex *regex) {
-    // FILL THIS IN!
+    regfree(regex);
 }
 
 
@@ -65,7 +81,7 @@ void find_track_regex(char pattern[])
     Regex *regex = make_regex(pattern, REG_EXTENDED | REG_NOSUB);
 
     for (i=0; i<NUM_TRACKS; i++) {
-        if (regex_match(regex, tracks[i])) {
+        if (regex_match(regex, tracks[i])){
             printf("Track %i: '%s'\n", i, tracks[i]);
         }
     }
