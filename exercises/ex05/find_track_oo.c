@@ -30,12 +30,12 @@ typedef regex_t Regex;
 * returns: new Regex
 */
 Regex *make_regex(char *pattern, int flags) {
-    regex_t *regex = malloc(sizeof(regex_t));
-    if (regcomp(regex, pattern, flags) != 0){
+    regex_t *re = malloc(sizeof(regex_t));
+    if (regcomp(re, pattern, flags)){
       fprintf(stderr, "Could not compile regex\n");
       exit(1);
     }
-    return regex;
+    return re;
 }
 
 /* Checks whether a regex matches a string.
@@ -45,9 +45,8 @@ Regex *make_regex(char *pattern, int flags) {
 * returns: 1 if there's a match, 0 otherwise
 */
 int regex_match(Regex *regex, char *s) {
-    int reg_check;
+    int reg_check = regexec(regex, s, 0, NULL, 0);
     char msg_buf[100];
-    reg_check = regexec(regex, s, 0, NULL, 0);
     if (!reg_check){
       return 1;
     }
@@ -57,7 +56,7 @@ int regex_match(Regex *regex, char *s) {
     else {
       regerror(reg_check, regex, msg_buf, sizeof(msg_buf));
       fprintf(stderr, "Regex match failed: %s\n", msg_buf);
-      return 0;
+      exit(1);
     }
 }
 
