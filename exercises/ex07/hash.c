@@ -1,3 +1,11 @@
+/******************************************************************************
+
+                            Online C Compiler.
+                Code, Compile, Run and Debug C program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
 /* Example code for Exercises in C.
 
 Copyright 2016 Allen Downey
@@ -178,8 +186,14 @@ int hash_hashable(Hashable *hashable)
 */
 int equal_int (void *ip, void *jp)
 {
-    // FILL THIS IN!
-    return 0;
+    int ant = *(int *)ip;
+    int bnt = *(int *)jp;
+    if (ant == bnt){
+        return 1;
+    }
+    else{
+       return 0;
+    }
 }
 
 
@@ -192,8 +206,15 @@ int equal_int (void *ip, void *jp)
 */
 int equal_string (void *s1, void *s2)
 {
-    // FILL THIS IN!
-    return 0;
+    char* new_s1 = (char*)s1;
+    char* new_s2 = (char*)s2;
+    int val = strcmp(new_s1, new_s2);
+    if (val == 0){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 
@@ -207,8 +228,7 @@ int equal_string (void *s1, void *s2)
 */
 int equal_hashable(Hashable *h1, Hashable *h2)
 {
-    // FILL THIS IN!
-    return 0;
+    return h1->equal(h1->key, h2->key);
 }
 
 
@@ -296,7 +316,14 @@ Node *prepend(Hashable *key, Value *value, Node *rest)
 /* Looks up a key and returns the corresponding value, or NULL */
 Value *list_lookup(Node *list, Hashable *key)
 {
-    // FILL THIS IN!
+    while(list){
+        if (list -> key == key){
+            return list -> value;
+        }
+        else {
+            list = list -> next;
+        }
+    }
     return NULL;
 }
 
@@ -341,15 +368,17 @@ void print_map(Map *map)
 /* Adds a key-value pair to a map. */
 void map_add(Map *map, Hashable *key, Value *value)
 {
-    // FILL THIS IN!
+     Node *tempVar = make_node(key, value, map->lists[hash_hashable(key)%map->n]);
+     map -> lists[hash_hashable(key)%map -> n] = tempVar;
+
 }
 
 
 /* Looks up a key and returns the corresponding value, or NULL. */
 Value *map_lookup(Map *map, Hashable *key)
 {
-    // FILL THIS IN!
-    return NULL;
+    Value* tempVar = list_lookup(map->lists[hash_hashable(key)%map->n], key);
+    return tempVar;
 }
 
 
