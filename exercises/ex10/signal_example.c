@@ -45,6 +45,21 @@ void end_game(int sig)
 */
 void times_up(int sig) {
     puts("\nTIME'S UP!");
+
+    char* answer;
+    printf("\n What is the airspeed velocity of a common swallow?");
+    alarm(5);
+    char *ans = fgets(txt, 4, stdin);
+    answer = atoi(txt);
+
+    if (answer == "African or European?"){
+      printf("\nCorrect\n");
+      score++;
+    }
+    else {
+      printf("\nIncorrect\n");
+    }
+    printf("Score: %i\n", score);
     raise(SIGINT);
 }
 
@@ -71,7 +86,10 @@ int main(void) {
         alarm(5);
 
         // get the answer
-	    char *ret = fgets(txt, 4, stdin);
+        while (1) {
+            char *ret = fgets(txt, 4, stdin);
+            if (ret) break;
+        }
         answer = atoi(txt);
 
         // check the answer
